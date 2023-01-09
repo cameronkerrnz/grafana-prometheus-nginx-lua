@@ -12,6 +12,12 @@ scrape_configs:
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:8080"]
+  - job_name: "grafana"
+    static_configs:
+      - targets:
+        # The default Grafana dashboard (at least in Grafana 7) only expects a single
+        # grafana instance, which is why I haven't added the other Grafana instances.
+        - "grafana_7:3000"
   - job_name: "grafana-proxy"
     static_configs:
       - targets:
