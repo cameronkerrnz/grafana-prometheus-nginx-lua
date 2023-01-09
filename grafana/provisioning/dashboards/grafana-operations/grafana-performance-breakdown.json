@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 3,
-  "iteration": 1673130413143,
+  "iteration": 1673255205600,
   "links": [],
   "panels": [
     {
@@ -39,7 +38,7 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
+        "w": 6,
         "x": 0,
         "y": 0
       },
@@ -118,8 +117,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 8,
+        "w": 6,
+        "x": 6,
         "y": 0
       },
       "heatmap": {},
@@ -132,7 +131,7 @@
       "maxDataPoints": 25,
       "pluginVersion": "7.5.17",
       "repeatDirection": "h",
-      "repeatIteration": 1673130413143,
+      "repeatIteration": 1673255205600,
       "repeatPanelId": 2,
       "reverseYBuckets": false,
       "scopedVars": {
@@ -198,8 +197,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 16,
+        "w": 6,
+        "x": 12,
         "y": 0
       },
       "heatmap": {},
@@ -212,14 +211,94 @@
       "maxDataPoints": 25,
       "pluginVersion": "7.5.17",
       "repeatDirection": "h",
-      "repeatIteration": 1673130413143,
+      "repeatIteration": 1673255205600,
       "repeatPanelId": 2,
       "reverseYBuckets": false,
       "scopedVars": {
         "folder": {
           "selected": false,
-          "text": "Grafana Performance Management",
-          "value": "Grafana Performance Management"
+          "text": "General",
+          "value": "General"
+        }
+      },
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(increase(grafana_prometheus_request_duration_seconds_bucket{folder=\"$folder\"}[$__interval])) by (le)",
+          "format": "heatmap",
+          "interval": "",
+          "legendFormat": "{{le}}",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Folder '$folder'",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "transparent": true,
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "none",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "upper",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#5794F2",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateBlues",
+        "exponent": 0.5,
+        "mode": "opacity"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 19,
+      "legend": {
+        "show": false
+      },
+      "maxDataPoints": 25,
+      "pluginVersion": "7.5.17",
+      "repeatDirection": "h",
+      "repeatIteration": 1673255205600,
+      "repeatPanelId": 2,
+      "reverseYBuckets": false,
+      "scopedVars": {
+        "folder": {
+          "selected": false,
+          "text": "Grafana Operations",
+          "value": "Grafana Operations"
         }
       },
       "targets": [
@@ -625,7 +704,7 @@
       "type": "table"
     }
   ],
-  "refresh": false,
+  "refresh": "30s",
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -774,12 +853,12 @@
     ]
   },
   "time": {
-    "from": "2023-01-07T08:52:49.889Z",
-    "to": "2023-01-07T14:54:24.445Z"
+    "from": "now-3h",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Folder Dashboard Panel performance",
   "uid": "HpBRLZh4z",
-  "version": 13
+  "version": 1
 }
