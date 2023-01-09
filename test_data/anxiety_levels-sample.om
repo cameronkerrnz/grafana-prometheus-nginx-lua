@@ -1,0 +1,11 @@
+# HELP anxiety_level A gauge that should illustrate a churn problem
+# TYPE anxiety_level gauge
+anxiety_level{shard="95",client="652"} 634 1672474569.0
+anxiety_level{shard="46",client="81c"} 634 1672474569.0
+anxiety_level{shard="69",client="e2f4a"} 634 1672474569.0
+anxiety_level{shard="81",client="d240e"} 634 1672474569.0
+anxiety_level{shard="22",client="fb34"} 634 1672474569.0
+anxiety_level{shard="78",client="261f2"} 634 1672474569.0
+anxiety_level{shard="30",client="b"} 634 1672474569.0
+...
+# EOF

@@ -1,0 +1,144 @@
+version: '3.8'
+
+# Developed on a Mac M1 (ARM64 CPU) with Docker Desktop
+
+volumes:
+    prometheus_data: {}
+    grafana_6_data: {}
+    grafana_7_data: {}
+    grafana_8_data: {}
+    grafana_9_data: {}
+
+services:
+
+  prometheus:
+    image: "prom/prometheus:v2.41.0"
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      # - '--log.level=warn'
+      # - '--web.enable-admin-api'
+    ports:
+      - 9090:9090
+    restart: always
+
+  # WARNING: particularly on hosts running containers, you should inspect what
+  # is being generated and minimise it to what you need.
+  #
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+      - '--log.level=warn'
+      # prevent /host/etc/os-release permission errors in Docker Desktop for Mac
+      - '--no-collector.os'
+    # network_mode: host
+    ports:
+      - 9100:9100
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro'
+
+  # WARNING: this default configuration of cadvisor is likely
+  # to cause you issues later on with regard to cardinality
+  # issues.
+  #
+  cadvisor:
+    # This version (v0.46.0) includes multi-arch support
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
+    command:
+      # 0 = info, 1 = warning, error = 2, fatal = 3, default = 0
+      - '-stderrthreshold=1'
+    ports:
+      - 8070:8080
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+  grafana_6:
+    image: "grafana/grafana:6.7.6"
+    depends_on:
+      - rev_proxy
+    ports:
+      - 3006:3000
+    volumes:
+      - grafana_6_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/
+      - ./grafana/provisioning/dashboards/:/etc/grafana/provisioning/dashboards/
+    environment:
+      GF_LOG_CONSOLE_LEVEL: warn
+      GF_AUTH_LOGIN_COOKIE_NAME: grafana_6_session
+    restart: always
+
+  grafana_7:
+    image: "grafana/grafana:7.5.17"
+    depends_on:
+      - rev_proxy
+    ports:
+      - 3007:3000
+    volumes:
+      - grafana_7_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/
+      - ./grafana/provisioning/dashboards/:/etc/grafana/provisioning/dashboards/
+    environment:
+      #GF_LOG_CONSOLE_LEVEL: warn
+      GF_AUTH_LOGIN_COOKIE_NAME: grafana_7_session
+    restart: always
+
+  grafana_8:
+    image: "grafana/grafana:8.5.15"
+    depends_on:
+      - rev_proxy
+    ports:
+      - 3008:3000
+    volumes:
+      - grafana_8_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/
+      - ./grafana/provisioning/dashboards/:/etc/grafana/provisioning/dashboards/
+    environment:
+      GF_LOG_CONSOLE_LEVEL: warn
+      GF_AUTH_LOGIN_COOKIE_NAME: grafana_8_session
+    restart: always
+
+  grafana_9:
+    image: "grafana/grafana:9.3.2"
+    depends_on:
+      - rev_proxy
+    ports:
+      - 3009:3000
+    volumes:
+      - grafana_9_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/
+      - ./grafana/provisioning/dashboards/:/etc/grafana/provisioning/dashboards/
+    environment:
+      GF_LOG_CONSOLE_LEVEL: warn
+      GF_AUTH_LOGIN_COOKIE_NAME: grafana_9_session
+    restart: always
+
+  rev_proxy:
+    # https://hub.docker.com/r/openresty/openresty
+    # I'm using a Mac M1, so alpine version (only version currently that supports aarch64)
+    # OpenResty provides its own package-manager, OPM: https://opm.openresty.org/
+    build: ./rev_proxy/
+    # depends_on:
+    #   - grafana
+    ports:
+      - 8080:8080
+      - 8086:8086
+      - 8087:8087
+      - 8088:8088
+      - 8089:8089
+    volumes:
+      - "./rev_proxy/nginx/conf.d:/etc/nginx/conf.d"
+      - "./rev_proxy/nginx/conf:/etc/nginx/conf"
+      - "./rev_proxy/nginx/lua:/etc/nginx/lua"
+      - "./rev_proxy/nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf"
+    restart: always

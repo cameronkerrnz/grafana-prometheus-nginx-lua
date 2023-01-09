@@ -1,0 +1,23 @@
+apiVersion: 1
+
+providers:
+  - name: 'anxious-armidillo'
+    orgId: 1
+    folder: 'Anxious Armadillo'
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/anxious-armadillo/
+
+  - name: 'grafana-operations'
+    orgId: 1
+    folder: 'Grafana Operations'
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/grafana-operations/
+
+  - name: 'general'
+    orgId: 1
+    # If you want it in the General folder, then don't specify a folder.
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/general/
