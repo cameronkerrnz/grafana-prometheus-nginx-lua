@@ -3,7 +3,7 @@
 ## Generate the test data
 
 ```
-$ /usr/bin/python3 ./test_data/anxiety-levels.py > anxiety-levels.om
+$ /usr/bin/python3 ./test_data/anxiety-level.py > ./test_data/anxiety-level.om
 Simulation starts: 2022-12-31 21:15:54
 Simulation ends: 2023-01-07 21:15:54.024699
 Scrape interval: 0:00:15
@@ -26,7 +26,7 @@ anxiety_level{shard="69",client="e2f4af"} 634 1672474569.0
 ```
 ## Copy the data into the Prometheus running container
 
-$ docker cp anxiety-levels.om prometheus-grafana-nginx-lua-prometheus-1:/prometheus/
+$ docker cp ./test_data/anxiety-level.om prometheus-grafana-nginx-lua-prometheus-1:/prometheus/
 
 ## Shell into the container
 
@@ -36,14 +36,14 @@ $ docker exec -it prometheus-grafana-nginx-lua-prometheus-1 /bin/sh
 # /prometheus is mounted # as a volume-mount in our docker-compose.yml
 
 /prometheus $ mkdir NEW
-/prometheus $ promtool tsdb create-blocks-from openmetrics anxiety-levels.om ./NEW/
+/prometheus $ promtool tsdb create-blocks-from openmetrics anxiety-level.om ./NEW/
 BLOCK ULID MIN TIME MAX TIME DURATION NUM SAMPLES NUM CHUNKS NUM SERIES SIZE 01GP5Z71W2RPRENGTPGCRZQWQ0 1672474569000 1672480794001 1h43m45.001s 23457 19849 19849 1895194
 ... one line for every 2 hours by default
 
 ## Assuming it completed without complaint
 /prometheus $ mv NEW/* .
 /prometheus $ rmdir NEW
-/prometheus $ rm anxiety-levels.om
+/prometheus $ rm anxiety-level.om
 ```
 
 # Delete from Prometheus
